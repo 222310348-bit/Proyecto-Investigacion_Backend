@@ -1,0 +1,76 @@
+RECORDAR - BACKEND (Proyecto-Investigacion_Backend)
+====================================================
+
+ORDEN PARA ECHAR A ANDAR LA PAGINA EN LOCAL
+  1. Encender MySQL.
+  2. Encender el backend (esta carpeta).
+  3. Encender el frontend (carpeta Proyecto-Investigacion_Frontend).
+
+
+CADA VEZ QUE QUIERA USARLO
+--------------------------
+  1. Verificar que MySQL este encendido.
+  2. Abrir una terminal en esta carpeta y ejecutar:
+
+         npm run dev
+
+  3. Debe aparecer:
+
+         Conectado a la base de datos "bdinvestigacion".
+         API escuchando en http://localhost:3000
+
+  4. Dejar esa terminal abierta. Se apaga con Ctrl + C.
+
+  Prueba rapida en el navegador:
+         http://localhost:3000/api/proyectos     (debe mostrar los proyectos en JSON)
+
+
+SOLO LA PRIMERA VEZ (o en una computadora nueva)
+------------------------------------------------
+  1. npm install
+  2. Importar en MySQL, en este orden, los archivos de la carpeta database:
+         00_crear_bd.sql
+         01_proyecto.sql
+         02_usuario.sql
+  3. Copiar .env.example como .env y llenar:
+         DB_USER       usuario de MySQL
+         DB_PASSWORD   contrasena de MySQL
+         JWT_SECRET    un texto largo y aleatorio
+  4. Crear el administrador:
+         npm run crear-admin -- <usuario> <contrasena>
+
+
+ADMINISTRADOR
+-------------
+  - Crear otro administrador o cambiar una contrasena (mismo comando):
+         npm run crear-admin -- <usuario> <contrasena>
+  - Contrasena de minimo 8 caracteres. Evitar la letra enie, acentos, espacios
+    y simbolos como $ & " !  porque la terminal los puede alterar.
+  - La contrasena se guarda cifrada: no se puede crear ni cambiar a mano en phpMyAdmin.
+  - La sesion dura 8 horas (JWT_EXPIRA en .env).
+
+
+DETALLES IMPORTANTES
+--------------------
+  - El archivo .env tiene las contrasenas. NO se sube a GitHub (ya esta en .gitignore).
+  - Puerto de la API: 3000 (PORT en .env).
+  - El backend solo acepta peticiones del frontend en http://localhost:5173
+    (CORS_ORIGIN en .env). Si el frontend abre en otro puerto, cambiar ese valor
+    y reiniciar el backend.
+  - Si cambio algo en .env hay que reiniciar: Ctrl + C y otra vez npm run dev.
+  - Base de datos: bdinvestigacion. Tablas: proyecto y usuario.
+
+
+SI ALGO FALLA
+-------------
+  "Faltan variables en el archivo .env"
+        No existe .env o falta DB_USER, DB_NAME o JWT_SECRET.
+  "No se pudo conectar a la base de datos"
+        MySQL esta apagado, o el usuario/contrasena de .env no coinciden.
+  "Table 'bdinvestigacion.usuario' doesn't exist"
+        Falta importar database/02_usuario.sql.
+  "EADDRINUSE ... 3000"
+        Ya hay otra terminal con el backend encendido. Cerrarla o usar esa.
+  El login rechaza una contrasena correcta desde PowerShell
+        Pasa con enie o acentos. Desde la pagina funciona; mejor usar una
+        contrasena sin esos caracteres.
