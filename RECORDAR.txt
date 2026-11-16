@@ -36,16 +36,27 @@ SOLO LA PRIMERA VEZ (o en una computadora nueva)
          DB_USER       usuario de MySQL
          DB_PASSWORD   contrasena de MySQL
          JWT_SECRET    un texto largo y aleatorio
-  4. Crear el administrador:
-         npm run crear-admin -- <usuario> <contrasena>
+  4. Crear el primer administrador (ver reglas en ADMINISTRADORES):
+         npm run crear-admin -- <correo institucional> <contrasena>
 
 
-ADMINISTRADOR
--------------
-  - Crear otro administrador o cambiar una contrasena (mismo comando):
-         npm run crear-admin -- <usuario> <contrasena>
-  - Contrasena de minimo 8 caracteres. Evitar la letra enie, acentos, espacios
-    y simbolos como $ & " !  porque la terminal los puede alterar.
+ADMINISTRADORES
+---------------
+  - Lo normal es darlos de alta desde la pagina: Panel > Administradores.
+  - El usuario de una cuenta nueva SIEMPRE es un correo institucional:
+         nombre@itslerdo.edu.mx
+    (el dominio se puede cambiar con DOMINIO_CORREO en .env)
+  - La contrasena debe tener, a fuerza: minimo 8 caracteres, una mayuscula,
+    una minuscula, un numero y un simbolo (por ejemplo # $ % & ! ?).
+  - Desde la terminal (para el primer administrador, o si olvide mi contrasena):
+         npm run crear-admin -- <correo institucional> <contrasena>
+    Si la cuenta ya existe, ese comando solo le cambia la contrasena.
+    Poner la contrasena entre comillas simples para que PowerShell no altere los simbolos:
+         npm run crear-admin -- Admin 'MiClave#2026'
+  - La cuenta inicial "Admin" se conserva aunque no sea un correo.
+  - Nadie puede eliminar su propia cuenta; asi nunca se queda el sistema sin administradores.
+  - Al eliminar una cuenta, su sesion deja de servir de inmediato.
+  - Evitar la letra enie y acentos en la contrasena si se escribe desde PowerShell.
   - La contrasena se guarda cifrada: no se puede crear ni cambiar a mano en phpMyAdmin.
   - La sesion dura 8 horas (JWT_EXPIRA en .env).
 
@@ -59,6 +70,7 @@ DETALLES IMPORTANTES
     y reiniciar el backend.
   - Si cambio algo en .env hay que reiniciar: Ctrl + C y otra vez npm run dev.
   - Base de datos: bdinvestigacion. Tablas: proyecto y usuario.
+  - Despues de actualizar el codigo del backend hay que reiniciarlo.
 
 
 SI ALGO FALLA

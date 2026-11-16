@@ -20,4 +20,6 @@ export const env = {
   jwtSecret: process.env.JWT_SECRET,
   jwtExpira: process.env.JWT_EXPIRA || '8h',
   corsOrigin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+  // Dominio obligatorio del correo de los administradores nuevos
+  dominioCorreo: (process.env.DOMINIO_CORREO || 'itslerdo.edu.mx').toLowerCase(),
 };

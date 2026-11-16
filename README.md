@@ -18,10 +18,11 @@ src/
   server.js            Arranque: comprueba la conexión y levanta la API
   app.js               Configuración de Express y rutas
   config/              Variables de entorno y conexión a MySQL
-  controllers/         Lógica de proyectos y de inicio de sesión
+  controllers/         Lógica de proyectos, inicio de sesión y administradores
   middlewares/         Verificación de sesión y manejo de errores
   routes/              Definición de rutas
-  scripts/crearAdmin.js  Alta de administradores
+  utils/validaciones.js  Reglas del correo institucional y de la contraseña
+  scripts/crearAdmin.js  Alta del primer administrador desde la terminal
 ```
 
 ## Instalación
@@ -48,10 +49,11 @@ src/
 4. Crear el primer administrador:
 
    ```
-   npm run crear-admin -- <usuario> <contraseña>
+   npm run crear-admin -- <correo institucional> <contraseña>
    ```
 
-   El mismo comando cambia la contraseña de un usuario existente.
+   El mismo comando cambia la contraseña de un usuario existente. Después, los demás
+   administradores se dan de alta desde el panel de la página.
 
 5. Iniciar la API:
 
@@ -72,6 +74,10 @@ src/
 | POST | `/api/proyectos` | Administrador | Crea un proyecto |
 | PUT | `/api/proyectos/:id` | Administrador | Actualiza un proyecto |
 | DELETE | `/api/proyectos/:id` | Administrador | Elimina un proyecto |
+| GET | `/api/usuarios` | Administrador | Lista de administradores |
+| POST | `/api/usuarios` | Administrador | Da de alta un administrador |
+| PUT | `/api/usuarios/:id/password` | Administrador | Cambia la contraseña de un administrador |
+| DELETE | `/api/usuarios/:id` | Administrador | Elimina un administrador |
 
 ### Filtros de la lista
 
@@ -100,13 +106,26 @@ proyecto 1000, objetivo 1000, participantes 500.
 ### Sesión de administrador
 
 `POST /api/auth/login` recibe `{ "usuario": "...", "password": "..." }` y responde
-`{ "token": "...", "usuario": "..." }`. Las rutas de administrador exigen el encabezado:
+`{ "token": "...", "id": 1, "usuario": "..." }`. Las rutas de administrador exigen el encabezado:
 
 ```
 Authorization: Bearer <token>
 ```
 
 El token expira según `JWT_EXPIRA` (8 horas por defecto).
+
+### Administradores
+
+`POST /api/usuarios` recibe `{ "usuario": "correo", "password": "..." }`.
+
+- **Correo:** debe ser institucional, es decir, terminar en `@itslerdo.edu.mx`
+  (configurable con `DOMINIO_CORREO` en `.env`). Se guarda en minúsculas.
+- **Contraseña:** mínimo 8 caracteres con al menos una mayúscula, una minúscula,
+  un número y un símbolo. La misma regla aplica al cambiarla y en `crear-admin`.
+- Un administrador no puede eliminar su propia cuenta, así que siempre queda al menos uno.
+- Si una cuenta se elimina, su sesión deja de funcionar de inmediato.
+- La cuenta inicial `Admin` se conserva aunque no sea un correo; la regla del correo
+  aplica a las cuentas nuevas.
 
 ### Errores
 

@@ -28,9 +28,9 @@ export async function iniciarSesion(req, res) {
     { expiresIn: env.jwtExpira }
   );
 
-  return res.json({ token, usuario: encontrado.USUARIO });
+  return res.json({ token, id: encontrado.ID_USUARIO, usuario: encontrado.USUARIO });
 }
 
 export function perfil(req, res) {
-  res.json({ usuario: req.usuario.usuario });
+  res.json({ id: req.usuario.id, usuario: req.usuario.usuario });
 }
