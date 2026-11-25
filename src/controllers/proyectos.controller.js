@@ -1,7 +1,8 @@
 import { pool } from '../config/db.js';
+import { ICONOS_PROYECTO } from '../utils/iconosProyecto.js';
 
 const COLUMNAS =
-  'ID_PROYECTO AS id, CLAVE AS clave, PROYECTO AS proyecto, OBJETIVO AS objetivo, PARTICIPANTES AS participantes';
+  'ID_PROYECTO AS id, CLAVE AS clave, PROYECTO AS proyecto, OBJETIVO AS objetivo, PARTICIPANTES AS participantes, ICONO AS icono';
 
 // Igual que el sitio original: el tipo se distingue por el inicio de la clave.
 const PREFIJO_POR_TIPO = {
@@ -46,6 +47,13 @@ function validarProyecto(cuerpo) {
     }
     datos[campo] = valor || null;
   }
+
+  // Sin icono elegido se guarda NULL y la página usa el del área de la clave.
+  const icono = typeof cuerpo.icono === 'string' ? cuerpo.icono.trim() : '';
+  if (icono && !ICONOS_PROYECTO.includes(icono)) {
+    errores.icono = 'El icono elegido no es válido.';
+  }
+  datos.icono = icono || null;
 
   return { datos, errores, valido: Object.keys(errores).length === 0 };
 }
@@ -105,8 +113,8 @@ export async function crearProyecto(req, res) {
   }
 
   const [resultado] = await pool.query(
-    'INSERT INTO proyecto (CLAVE, PROYECTO, OBJETIVO, PARTICIPANTES) VALUES (?, ?, ?, ?)',
-    [datos.clave, datos.proyecto, datos.objetivo, datos.participantes]
+    'INSERT INTO proyecto (CLAVE, PROYECTO, OBJETIVO, PARTICIPANTES, ICONO) VALUES (?, ?, ?, ?, ?)',
+    [datos.clave, datos.proyecto, datos.objetivo, datos.participantes, datos.icono]
   );
   return res.status(201).json({ id: resultado.insertId, ...datos });
 }
@@ -126,8 +134,8 @@ export async function actualizarProyecto(req, res) {
   }
 
   await pool.query(
-    'UPDATE proyecto SET CLAVE = ?, PROYECTO = ?, OBJETIVO = ?, PARTICIPANTES = ? WHERE ID_PROYECTO = ?',
-    [datos.clave, datos.proyecto, datos.objetivo, datos.participantes, id]
+    'UPDATE proyecto SET CLAVE = ?, PROYECTO = ?, OBJETIVO = ?, PARTICIPANTES = ?, ICONO = ? WHERE ID_PROYECTO = ?',
+    [datos.clave, datos.proyecto, datos.objetivo, datos.participantes, datos.icono, id]
   );
   return res.json({ id, ...datos });
 }

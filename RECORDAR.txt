@@ -32,6 +32,7 @@ SOLO LA PRIMERA VEZ (o en una computadora nueva)
          00_crear_bd.sql
          01_proyecto.sql
          02_usuario.sql
+         03_icono_proyecto.sql
   3. Copiar .env.example como .env y llenar:
          DB_USER       usuario de MySQL
          DB_PASSWORD   contrasena de MySQL
@@ -70,6 +71,8 @@ DETALLES IMPORTANTES
     y reiniciar el backend.
   - Si cambio algo en .env hay que reiniciar: Ctrl + C y otra vez npm run dev.
   - Base de datos: bdinvestigacion. Tablas: proyecto y usuario.
+  - La tabla proyecto tiene la columna ICONO (agregada con 03_icono_proyecto.sql).
+    Si ya tenia la base funcionando, solo importar ese archivo una vez.
   - Despues de actualizar el codigo del backend hay que reiniciarlo.
 
 
@@ -81,6 +84,8 @@ SI ALGO FALLA
         MySQL esta apagado, o el usuario/contrasena de .env no coinciden.
   "Table 'bdinvestigacion.usuario' doesn't exist"
         Falta importar database/02_usuario.sql.
+  "Unknown column 'ICONO'"
+        Falta importar database/03_icono_proyecto.sql.
   "EADDRINUSE ... 3000"
         Ya hay otra terminal con el backend encendido. Cerrarla o usar esa.
   El login rechaza una contrasena correcta desde PowerShell

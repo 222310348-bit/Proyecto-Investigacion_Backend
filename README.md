@@ -5,7 +5,7 @@ Conecta el frontend en React con la base de datos MySQL `bdinvestigacion` y perm
 que un administrador cree, edite y elimine proyectos sin entrar a phpMyAdmin.
 
 - **Tecnología:** Node.js 20 o superior, Express, MySQL.
-- **Base de datos:** la tabla `proyecto` original, sin cambios, más una tabla nueva `usuario` para los administradores.
+- **Base de datos:** la tabla `proyecto` original con una columna nueva `ICONO` (icono que elige el administrador), más una tabla nueva `usuario` para los administradores.
 
 ## Estructura
 
@@ -14,6 +14,7 @@ database/
   00_crear_bd.sql      Crea la base bdinvestigacion
   01_proyecto.sql      Volcado original de la tabla proyecto (39 registros), sin modificar
   02_usuario.sql       Tabla nueva de administradores
+  03_icono_proyecto.sql  Agrega la columna ICONO a la tabla proyecto
 src/
   server.js            Arranque: comprueba la conexión y levanta la API
   app.js               Configuración de Express y rutas
@@ -22,6 +23,7 @@ src/
   middlewares/         Verificación de sesión y manejo de errores
   routes/              Definición de rutas
   utils/validaciones.js  Reglas del correo institucional y de la contraseña
+  utils/iconosProyecto.js  Iconos que se pueden asignar a un proyecto
   scripts/crearAdmin.js  Alta del primer administrador desde la terminal
 ```
 
@@ -34,13 +36,16 @@ src/
    ```
 
 2. Crear la base de datos. Si ya tienes `bdinvestigacion` con la tabla `proyecto`,
-   ejecuta solo el archivo 02:
+   ejecuta solo los archivos 02 y 03 (el 02 solo si aún no lo importaste):
 
    ```
    mysql -u root -p < database/00_crear_bd.sql
    mysql -u root -p bdinvestigacion < database/01_proyecto.sql
    mysql -u root -p bdinvestigacion < database/02_usuario.sql
+   mysql -u root -p bdinvestigacion < database/03_icono_proyecto.sql
    ```
+
+   El archivo 03 se importa una sola vez: si se repite, MySQL avisa que la columna `ICONO` ya existe.
 
    También se pueden importar desde phpMyAdmin en ese mismo orden.
 
@@ -95,12 +100,14 @@ Es la misma regla que usaba el `index.php` original para separar proyectos inter
   "clave": "CONACYT 214582",
   "proyecto": "Título del proyecto",
   "objetivo": "Objetivo del proyecto",
-  "participantes": "Nombre Uno / Nombre Dos"
+  "participantes": "Nombre Uno / Nombre Dos",
+  "icono": "vinculacion"
 }
 ```
 
 Para crear o actualizar se envían `clave` y `proyecto` (obligatorios), `objetivo` y
-`participantes` (opcionales). Los límites son los de la tabla: clave 100 caracteres,
+`participantes` (opcionales) e `icono` (opcional: uno de `src/utils/iconosProyecto.js`, o vacío para usar
+el icono del área de la clave). Los límites son los de la tabla: clave 100 caracteres,
 proyecto 1000, objetivo 1000, participantes 500.
 
 ### Sesión de administrador
