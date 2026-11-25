@@ -52,7 +52,7 @@ ADMINISTRADORES
          npm run crear-admin -- <correo institucional> <contrasena>
     Si la cuenta ya existe, ese comando solo le cambia la contrasena.
     Poner la contrasena entre comillas simples para que PowerShell no altere los simbolos:
-         npm run crear-admin -- Admin 'MiClave#2026'
+         npm run crear-admin -- Admin 'password1234'
   - La cuenta inicial "Admin" se conserva aunque no sea un correo.
   - Nadie puede eliminar su propia cuenta; asi nunca se queda el sistema sin administradores.
   - Al eliminar una cuenta, su sesion deja de servir de inmediato.
